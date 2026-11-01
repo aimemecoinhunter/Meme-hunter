@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from gecko import fetch_new_pools
-from scanner.scoring import score_pool
+from scoring import score_pool
 
 st.set_page_config(page_title="AI Meme Coin Hunter", page_icon="🎯", layout="wide")
 st.title("🎯 AI Meme Coin Hunter")
