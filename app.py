@@ -65,3 +65,69 @@ else:
     4. Afișează un clasament și permite exportul CSV.
     """)
     st.warning("Scorul este bazat pe reguli simple, nu este o predicție și nu garantează profit. Verifică separat contractul, distribuția deținătorilor și riscul de rug pull.")
+st.divider()
+st.header("🤖 AI Meme Coin Hunter - Paper Trading")
+
+if "paper_bot" not in st.session_state:
+    st.session_state.paper_bot = PaperTrading(
+        capital=1000,
+        max_position=200,
+        max_open=5
+    )
+
+bot = st.session_state.paper_bot
+status = bot.status()
+
+st.subheader("Capital și rezultate")
+
+c1, c2, c3 = st.columns(3)
+c1.metric("Capital disponibil", f"${status['available_capital']:.2f}")
+c2.metric("Profit separat", f"${status['profit_balance']:.2f}")
+c3.metric("Poziții deschise", status["open_positions"])
+
+st.divider()
+st.subheader("Simulare cumpărare")
+
+token = st.text_input("Numele sau adresa tokenului", key="buy_token")
+entry_price = st.number_input(
+    "Preț de cumpărare",
+    min_value=0.000000001,
+    value=0.0001,
+    format="%.10f"
+)
+amount = st.number_input(
+    "Investiție USDC",
+    min_value=1.0,
+    max_value=200.0,
+    value=200.0
+)
+
+if st.button("Simulează cumpărarea"):
+    if token.strip():
+        st.info(bot.buy(token.strip(), entry_price, amount))
+    else:
+        st.warning("Introdu numele tokenului.")
+
+st.divider()
+st.subheader("Actualizare preț și vânzări simulate")
+
+price_token = st.text_input("Token existent", key="price_token")
+current_price = st.number_input(
+    "Preț actual",
+    min_value=0.000000001,
+    value=0.0001,
+    format="%.10f"
+)
+
+if st.button("Actualizează prețul"):
+    messages = bot.update_price(price_token.strip(), current_price)
+    for message in messages:
+        st.write(message)
+
+st.divider()
+st.subheader("Istoric evenimente")
+for event in reversed(bot.status()["events"]):
+    st.write(event)
+
+st.subheader("Moonbag-uri păstrate")
+st.write(bot.moonbags)
