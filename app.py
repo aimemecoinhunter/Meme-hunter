@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from gecko import fetch_new_pools
 from scoring import score_pool
-
+from paper_trading import PaperTrading
 st.set_page_config(page_title="AI Meme Coin Hunter", page_icon="🎯", layout="wide")
 st.title("🎯 AI Meme Coin Hunter")
 st.caption("Solana meme-coin discovery scanner • GeckoTerminal • Research only, no trading")
